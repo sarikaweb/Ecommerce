@@ -1,19 +1,28 @@
 import React, { useEffect, useState }  from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { addCart } from '../redux/actions/index'
 import { NavLink, useParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 
 
 
+
 const Product = () => {
  
-    const {id} = useParams;
+    const {id} = useParams();
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+
+    const addProduct = () => {
+        dispatch(addCart(product));
+    }
+
 
     useEffect(() => {
 const getProductItem =  async () => {
     setLoading(true);
-    const response = await fetch(`https://fakestoreapi.com/products/1`);
+    const response = await fetch(`https://fakestoreapi.com/products/${id}`);
     console.log(response);
     const prodData = await response.json();
     setProduct(prodData);
@@ -57,8 +66,8 @@ const getProductItem =  async () => {
                 <h3 className='text-danger fw-bolder'>$ {product.price}</h3>
                <p>{product.description}</p>
 
-               <button className='btn btn-dark mx-2'><i className='fa fa-shopping-cart'> </i> Add to Cart</button>
-               <NavLink className='btn btn-dark' to="/cart"><i className='fa fa-shopping-cart'> </i> Go to Cart</NavLink>
+               <button className='btn btn-dark mx-2' onClick={addProduct}><i className='fa fa-shopping-cart'> </i> Add to Cart</button>
+               <NavLink className='btn btn-dark' to="/Cart"><i className='fa fa-shopping-cart'> </i> Go to Cart</NavLink>
             </div>
             </>
         )
